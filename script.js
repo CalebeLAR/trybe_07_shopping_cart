@@ -39,3 +39,20 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
 };
 
 window.onload = () => { };
+
+// Função implementada no requisito 2;
+const listMaker = async () => { 
+  // função que para cada produto da lista de produtos, coloca um elemento HTML na section de classe items;
+
+  const sectionClassItems = document.querySelector('.items');
+  const objeto = await fetchProducts('computador');
+  const { results: productsList } = objeto;
+
+  productsList.forEach((product) => {
+    const { id: sku, title: name, thumbnail: image } = product;
+    const elementHTML = createProductItemElement({ sku, name, image });
+    sectionClassItems.appendChild(elementHTML);
+  });
+};
+
+listMaker();
