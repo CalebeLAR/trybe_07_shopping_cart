@@ -24,19 +24,19 @@ const createProductItemElement = ({ sku, name, image }) => {
   return section;
 };
 
-const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
+// const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
-const cartItemClickListener = (event) => {
-  // coloque seu código aquii
-};
+// const cartItemClickListener = (event) => {
+//   // coloque seu código aquii
+// };
 
-const createCartItemElement = ({ sku, name, salePrice }) => {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-};
+// const createCartItemElement = ({ sku, name, salePrice }) => {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   return li;
+// };
 
 window.onload = () => { };
 
@@ -45,8 +45,8 @@ const listMaker = async () => {
   // função que para cada produto da lista de produtos, coloca um elemento HTML na section de classe items;
 
   const sectionClassItems = document.querySelector('.items');
-  const objeto = await fetchProducts('computador');
-  const { results: productsList } = objeto;
+  const object = await fetchProducts('computador');
+  const { results: productsList } = object;
 
   productsList.forEach((product) => {
     const { id: sku, title: name, thumbnail: image } = product;
