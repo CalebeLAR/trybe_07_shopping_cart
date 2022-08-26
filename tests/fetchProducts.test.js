@@ -23,7 +23,7 @@ describe('1 - Teste a função fetchProducts', () => {
   test('verifica se fetchProducts ao receber o argumento \'computador\' retorna um objeto similar ao armazenado em \'item\'.', async ()=>{
     expect.assertions(1);
     const result = await fetchProducts('computador');
-    expect(result).toStrictEqual(computadorSearch); // testar se os objetos têm os mesmo tipo e estrutura.
+    expect(result).toStrictEqual(computadorSearch); // testa se os objetos são iguais em tipo e em estrutura
   });
 
   test('verifica se ao chamar fetchProducts sem argumento, ela retorna um erro com a mensagem: \'You must provide an url\'', async ()=>{
