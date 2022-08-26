@@ -26,9 +26,11 @@ const createProductItemElement = ({ sku, name, image }) => {
 
 // const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
-// const cartItemClickListener = () => {
-//   // coloque seu código aqui
-// };
+const cartItemClickListener = (event) => {
+  const cart = event.target.parentElement;
+  const item = event.target;
+  cart.removeChild(item);
+};
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
@@ -57,17 +59,17 @@ const createProductsListing = async () => {
 
 // Funções implementadas no requisito 4;
 const throwToCartComponet = async (event) => {
-  const olClassCartItems = document.querySelector('.cart__items'); // busca <ol class="cart__items"></ol>
   const button = event.target;
   const itemButton = button.parentElement;
   const itemSkuButton = itemButton.querySelector('.item__sku'); // no elementoHTML itemButton temos outros elementos HTML, o querySlector busca por quele que tem a classe '.item__sku'.
   const buttonID = itemSkuButton.innerText;
   
   // usa a função fetchItem para criar o elemento
+  const cart = document.querySelector('.cart__items'); // busca <ol class="cart__items"></ol>
   const fetchItemObject = await fetchItem(buttonID);
   const { id: sku, title: name, price: salePrice } = fetchItemObject;
   const elementHTML = createCartItemElement({ sku, name, salePrice });
-  olClassCartItems.appendChild(elementHTML); 
+  cart.appendChild(elementHTML); 
 };
 
 const createCartItemComponents = async () => {
@@ -81,3 +83,10 @@ window.onload = async () => {
   await createProductsListing();
   await createCartItemComponents();
 };
+// const cart = document.querySelector('.cart__items');
+//   const cartItems = cart.children;
+//   [...cartItems].forEach((item) => { 
+//     item.addEventListener('click', (event) => {
+//       cart.removeChild(event.target);
+//     });
+//   });
