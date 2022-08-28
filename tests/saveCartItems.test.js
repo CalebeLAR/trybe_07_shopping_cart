@@ -4,13 +4,22 @@ const saveCartItems = require('../helpers/saveCartItems');
 localStorageSimulator('setItem');
 
 describe('3 - Teste a função saveCartItems', () => {
-  // implemente seus testes aqui
-  test('Teste se, ao executar getSavedCartItems, o método localStorage.getItem é chamado', () => {
+
+  test('saveCartItems ao receber o argumento <ol><li>Item</li></ol>, deve chamar o método localStorage.setItem.', () => {
+    expect.assertions(1);
     saveCartItems('<ol><li>Item</li></ol>');
     expect(localStorage.setItem).toHaveBeenCalled()
   })
-  test('teste se, ao executar saveCartItems com o argumento <ol><li>Item</li></ol>, o método localStorage.setItem é chamado com dois parâmetros, sendo o primeiro cartItems e o segundo sendo o valor passado como argumento para saveCartItems', () => {
+
+  test('saveCartItems ao receber o argumento <ol><li>Item</li></ol>, deve chamar o método localStorage.setItem com dois parâmetros, sendo o primeiro \'cartItems\' e o segundo <ol><li>Item</li></ol>.', () => {
+    expect.assertions(1);
     saveCartItems('<ol><li>Item</li></ol>');
     expect(localStorage.setItem).toHaveBeenCalledWith('cartItems', '<ol><li>Item</li></ol>')
   })
+
+  test('saveCartItems ao receber nem um argumento deve lançar um erro com a mensagem \'You must provide a valid value\'', ()=>{
+    expect.assertions(1);
+    expect(()=>(saveCartItems())).toThrowError('You must provide a valid value');
+   });
+
 });
