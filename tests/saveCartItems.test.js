@@ -17,9 +17,4 @@ describe('3 - Teste a função saveCartItems', () => {
     expect(localStorage.setItem).toHaveBeenCalledWith('cartItems', '<ol><li>Item</li></ol>')
   })
 
-  test('saveCartItems ao receber nem um argumento deve lançar um erro com a mensagem \'You must provide a valid value\'', ()=>{
-    expect.assertions(1);
-    expect(()=>(saveCartItems())).toThrowError('You must provide a valid value');
-   });
-
 });

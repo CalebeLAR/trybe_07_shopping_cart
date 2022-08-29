@@ -1,3 +1,5 @@
+const CART__ITEMS = document.querySelector('.cart__items'); 
+
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -24,12 +26,25 @@ const createProductItemElement = ({ sku, name, image }) => {
   return section;
 };
 
-// const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
+const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
+
+// Funções implementadas no requisito 8;
+const formatThatAreInHTML = (savedProducts) => {
+  // função que pega a string contendo todo o innerHTML da lista de produtos e trata ela para que de cada li da string se transforme em um array com apenas as informações sobre os produtos  
+  const firstFormatting = savedProducts.split('<li class="cart__item">'); // devolve um array similar à ['', 'SKU: id | NAME: nomedoproduto | PRICE: preço</li>', ... outros]
+  const secondFormatting = firstFormatting.map((li) => (li.replace('</li>', ''))); // devolve um array similar à ['', 'SKU: id | NAME: nomedoproduto | PRICE: preço', ... outros] sem </li> no final
+  let detailsProductList = secondFormatting.map((s) => (s.split('|')));// devolve um array similar à [[''], ["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] com um array vazio no inicio
+  detailsProductList = detailsProductList.splice(1); // devolve um array similar à [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] com arrays só com os valores uteis
+  return detailsProductList;
+  };
 
 const cartItemClickListener = (event) => {
   const cart = event.target.parentElement;
   const item = event.target;
   cart.removeChild(item);
+  
+  // código implementado no requisito 8;
+  saveCartItems(cart.innerHTML); // recebe todas as LIs de dentro da tag <ol class="cart__items"></ol>, e as adiciona no local storage;
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -39,8 +54,6 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   li.addEventListener('click', cartItemClickListener);
   return li;
 };
-
-// ------------------------------------------------------------------------------------------
 
 // Função implementada no requisito 2;
 const createProductsListing = async () => {
@@ -58,18 +71,24 @@ const createProductsListing = async () => {
 };
 
 // Funções implementadas no requisito 4;
-const throwToCartComponet = async (event) => {
+const getItemID = (event) => {
+  // função que faz o botão responder ao click adicionando uma descrição do produto na tag <ol class="cart__items"></ol>
   const button = event.target;
   const itemButton = button.parentElement;
-  const itemSkuButton = itemButton.querySelector('.item__sku'); // no elementoHTML itemButton temos outros elementos HTML, o querySlector busca por quele que tem a classe '.item__sku'.
-  const buttonID = itemSkuButton.innerText;
-  
+  const buttonID = getSkuFromProductItem(itemButton);
+  return buttonID;
+};
+
+const throwToCartComponet = async (event) => {
+  const buttonID = getItemID(event);
   // usa a função fetchItem para criar o elemento
-  const cart = document.querySelector('.cart__items'); // busca <ol class="cart__items"></ol>
   const fetchItemObject = await fetchItem(buttonID);
   const { id: sku, title: name, price: salePrice } = fetchItemObject;
   const elementHTML = createCartItemElement({ sku, name, salePrice });
-  cart.appendChild(elementHTML); 
+  CART__ITEMS.appendChild(elementHTML);
+
+  // código implementado no requisito 8;
+  saveCartItems(CART__ITEMS.innerHTML); // recebe todas as LIs de dentro da tag <ol class="cart__items"></ol>, e as adiciona no local storage;
 };
 
 const createCartItemComponents = async () => {
@@ -78,15 +97,24 @@ const createCartItemComponents = async () => {
     button.addEventListener('click', throwToCartComponet);
   });
 };
-
+// Função implementada no requisito 8
+const rescueSavedItems = () => {
+  // para cada produto salvo no local storage, monta um elemento do produto e coloca no carrinho.
+  const localStorage = getSavedCartItems();
+  const list = formatThatAreInHTML(localStorage);
+  list.forEach((product) => {
+    const obj = {
+      sku: product[0].replace('SKU: ', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o id
+      name: product[1].replace('NAME: ', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o nome
+      salePrice: product[2].replace('PRICE: $', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o preço
+    };
+    const { sku, name, salePrice } = obj;
+    const elementHTML = createCartItemElement({ sku, name, salePrice }); // monta o elemento que estava no local storage e ja coloca ele com as propriedades do addEventListner no carrinho!  
+    CART__ITEMS.appendChild(elementHTML);
+  });
+};
 window.onload = async () => { 
   await createProductsListing();
   await createCartItemComponents();
+  rescueSavedItems();
 };
-// const cart = document.querySelector('.cart__items');
-//   const cartItems = cart.children;
-//   [...cartItems].forEach((item) => { 
-//     item.addEventListener('click', (event) => {
-//       cart.removeChild(event.target);
-//     });
-//   });
