@@ -33,7 +33,7 @@ const formatThatAreInHTML = (savedProducts) => {
   // função que pega a string contendo todo o innerHTML da lista de produtos e trata ela para que de cada li da string se transforme em um array com apenas as informações sobre os produtos  
   const firstFormatting = savedProducts.split('<li class="cart__item">'); // devolve um array similar à ['', 'SKU: id | NAME: nomedoproduto | PRICE: preço</li>', ... outros]
   const secondFormatting = firstFormatting.map((li) => (li.replace('</li>', ''))); // devolve um array similar à ['', 'SKU: id | NAME: nomedoproduto | PRICE: preço', ... outros] sem </li> no final
-  let detailsProductList = secondFormatting.map((s) => (s.split('|')));// devolve um array similar à [[''], ["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] com um array vazio no inicio
+  let detailsProductList = secondFormatting.map((s) => (s.split(' |')));// devolve um array similar à [[''], ["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] com um array vazio no inicio
   detailsProductList = detailsProductList.splice(1); // devolve um array similar à [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] com arrays só com os valores uteis
   return detailsProductList;
   };
@@ -44,10 +44,8 @@ const aroudNumber = (valor) => {
   if (string.includes('.')) {
     const twoDecimalsPlaces = string.indexOf('.') + 3;
     const num = string.slice(0, twoDecimalsPlaces);
-    // console.log(twoDecimalsPlaces);
     return Number(num);
   }
-  // console.log(Number(valor));
   return Number(valor);
 };
 
@@ -64,8 +62,8 @@ const calculatePrice = () => {
       valor += Number(priceProduct);
     });
   }
-  console.log(aroudNumber(valor));
-  return aroudNumber(valor);
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerText = aroudNumber(valor);
 };
 
 const cartItemClickListener = (event) => {
@@ -136,9 +134,9 @@ const rescueSavedItems = () => {
   const list = formatThatAreInHTML(localStorage);
   list.forEach((product) => {
     const obj = {
-      sku: product[0].replace('SKU: ', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o id
-      name: product[1].replace('NAME: ', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o nome
-      salePrice: product[2].replace('PRICE: $', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o preço
+      sku: product[0].replace('SKU: ', '').replace(' ', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o id
+      name: product[1].replace('NAME: ', '').replace(' ', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o nome
+      salePrice: product[2].replace('PRICE: $', '').replace(' ', ''), //  do array [["SKU: id "], [" NAME: nomedoproduto "], [" PRICE: preço' "]] coloca na chave sku a string contendo o preço
     };
     const { sku, name, salePrice } = obj;
     const elementHTML = createCartItemElement({ sku, name, salePrice }); // monta o elemento que estava no local storage e ja coloca ele com as propriedades do addEventListner no carrinho!  
@@ -146,7 +144,18 @@ const rescueSavedItems = () => {
   });
   calculatePrice();
 };
+
+// função implementada no requisito 10
+const emptyCart = () => {
+  const emptyCartButton = document.querySelector('.empty-cart');
+  emptyCartButton.addEventListener('click', () => { 
+    CART__ITEMS.innerHTML = null;
+    saveCartItems(CART__ITEMS.innerHTML); 
+  });
+};
+
 window.onload = async () => { 
+  emptyCart();
   await createProductsListing();
   await createCartItemComponents();
   rescueSavedItems();
