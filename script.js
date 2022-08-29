@@ -38,6 +38,36 @@ const formatThatAreInHTML = (savedProducts) => {
   return detailsProductList;
   };
 
+// Função implementada no requisito 9;
+const aroudNumber = (valor) => {
+  const string = valor.toString();
+  if (string.includes('.')) {
+    const twoDecimalsPlaces = string.indexOf('.') + 3;
+    const num = string.slice(0, twoDecimalsPlaces);
+    // console.log(twoDecimalsPlaces);
+    return Number(num);
+  }
+  // console.log(Number(valor));
+  return Number(valor);
+};
+
+// Função implementada no requisito 9;
+const calculatePrice = () => {
+  const list = formatThatAreInHTML(CART__ITEMS.innerHTML);
+  
+  let valor = 0; 
+  if (list.length === 0) {
+    valor = 0;
+  } else {  
+    list.forEach((product) => {
+      const priceProduct = product[2].replace('PRICE: $', '');
+      valor += Number(priceProduct);
+    });
+  }
+  console.log(aroudNumber(valor));
+  return aroudNumber(valor);
+};
+
 const cartItemClickListener = (event) => {
   const cart = event.target.parentElement;
   const item = event.target;
@@ -45,6 +75,7 @@ const cartItemClickListener = (event) => {
   
   // código implementado no requisito 8;
   saveCartItems(cart.innerHTML); // recebe todas as LIs de dentro da tag <ol class="cart__items"></ol>, e as adiciona no local storage;
+  calculatePrice();
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -89,6 +120,7 @@ const throwToCartComponet = async (event) => {
 
   // código implementado no requisito 8;
   saveCartItems(CART__ITEMS.innerHTML); // recebe todas as LIs de dentro da tag <ol class="cart__items"></ol>, e as adiciona no local storage;
+  calculatePrice();
 };
 
 const createCartItemComponents = async () => {
@@ -112,6 +144,7 @@ const rescueSavedItems = () => {
     const elementHTML = createCartItemElement({ sku, name, salePrice }); // monta o elemento que estava no local storage e ja coloca ele com as propriedades do addEventListner no carrinho!  
     CART__ITEMS.appendChild(elementHTML);
   });
+  calculatePrice();
 };
 window.onload = async () => { 
   await createProductsListing();
