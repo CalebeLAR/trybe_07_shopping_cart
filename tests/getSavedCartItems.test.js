@@ -3,7 +3,7 @@ const getSavedCartItems = require('../helpers/getSavedCartItems');
 
 localStorageSimulator('getItem');
 
-describe('4 - Teste a função getSavedCartItems', () => {
+describe('4 - Testa função getSavedCartItems', () => {
 
  test('getSavedCartItems, deve chamar o método localStorage.getItem', () => { 
   expect.assertions(1);
