@@ -20,4 +20,4 @@ Desenvolvimento orientado a testes TDD, garantindo seu funcionamento e facilitan
     npm test 
 ```
 
-_Primeiro projeto do modulo de Frot-End, desenvolvido durante a minha formação na escola da trybe, que forneceu apenas os arquivos de estilo, configuração de lint e modelos para os mocks._
+_Primeiro projeto do modulo de Front-End, desenvolvido durante a minha formação na escola da trybe, que forneceu apenas os arquivos de estilo, configuração de lint e modelos para os mocks._
