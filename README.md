@@ -8,7 +8,7 @@ Desenvolvimento orientado a testes TDD, garantindo seu funcionamento e facilitan
 
 ```shell
 #1. Clone o repositório
-    git clone git@github.com:CalebeLAR/chopping-cart.git  
+    git clone git@github.com:CalebeLAR/trybe_07_shopping_cart.git  
 
 #2. Instale as dependências  
     npm install  
